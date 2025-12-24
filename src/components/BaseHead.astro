@@ -98,3 +98,13 @@ const articleSchema = article ? {
 {articleSchema && (
 	<script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 )}
+
+<!-- Dark mode initialization (must run before body renders to prevent flash) -->
+<script is:inline>
+	(function() {
+		const theme = localStorage.getItem('theme');
+		if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+	})();
+</script>

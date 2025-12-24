@@ -44,19 +44,18 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 				tags: tags,
 			}}
 		/>
-		<script is:inline>
-			(function() {
-				const theme = localStorage.getItem('theme');
-				if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-					document.documentElement.classList.add('dark');
-				}
-			})();
-		</script>
 	</head>
 	<body>
 		<Header />
 		<div class:list={['post-container', { 'has-toc': hasTOC }]}>
 			<main>
+				<nav class="breadcrumb">
+					<a href="/">首页</a>
+					<span class="sep">›</span>
+					<a href="/posts">文章</a>
+					<span class="sep">›</span>
+					<span class="current">{title}</span>
+				</nav>
 				<article>
 					<header class="post-header">
 						<h1>{title}</h1>
@@ -130,6 +129,37 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 		max-width: 720px;
 		margin: 0 auto;
 		padding: 1.5em 1em 3em;
+	}
+
+	/* 面包屑导航 */
+	.breadcrumb {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		font-size: 0.875em;
+		margin-bottom: 1.5em;
+	}
+
+	.breadcrumb a {
+		color: rgb(var(--gray));
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+
+	.breadcrumb a:hover {
+		color: var(--accent);
+	}
+
+	.breadcrumb .sep {
+		color: rgb(var(--gray));
+	}
+
+	.breadcrumb .current {
+		color: rgb(var(--gray-dark));
+		max-width: 200px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	/* TOC 侧边栏 - 固定在右侧空白区域 */

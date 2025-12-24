@@ -4,6 +4,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import TOC from '../../components/TOC.astro';
+import CodeCopy from '../../components/CodeCopy.astro';
 
 export async function getStaticPaths() {
 	const items = (await getCollection('weekly', ({ data }) => data.draft !== true))
@@ -40,6 +41,13 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 		<Header />
 		<div class="pick-container">
 			<main>
+				<nav class="breadcrumb">
+					<a href="/">首页</a>
+					<span class="separator">›</span>
+					<a href="/weekly">周刊</a>
+					<span class="separator">›</span>
+					<span class="current">#{issue}</span>
+				</nav>
 				<article>
 					<header class="pick-header">
 						<span class="pick-issue">#{issue}</span>
@@ -74,6 +82,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 			)}
 		</div>
 		<Footer />
+		<CodeCopy />
 	</body>
 </html>
 
@@ -83,6 +92,32 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 		max-width: 720px;
 		margin: 0 auto;
 		padding: 1.5em 1em 3em;
+	}
+
+	.breadcrumb {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		font-size: 0.875em;
+		margin-bottom: 1.5em;
+	}
+
+	.breadcrumb a {
+		color: rgb(var(--gray));
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+
+	.breadcrumb a:hover {
+		color: var(--accent);
+	}
+
+	.breadcrumb .separator {
+		color: rgb(var(--gray));
+	}
+
+	.breadcrumb .current {
+		color: rgb(var(--gray-dark));
 	}
 
 	/* TOC 侧边栏 */
