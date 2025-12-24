@@ -1,0 +1,117 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+	date: Date;
+	category: string;
+	tags?: string[];
+	slug: string;
+}
+
+const { title, description, date, category, tags, slug } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('zh-CN', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<article class="post-card">
+	<a href={`/posts/${slug}`} class="post-link">
+		<h2 class="post-title">{title}</h2>
+	</a>
+	<div class="post-meta">
+		<time datetime={date.toISOString()}>{formattedDate}</time>
+		<span class="separator">·</span>
+		<a href={`/categories/${category}`} class="category">{category}</a>
+	</div>
+	{description && <p class="post-description">{description}</p>}
+	{tags && tags.length > 0 && (
+		<div class="post-tags">
+			{tags.map(tag => (
+				<a href={`/tags/${tag}`} class="tag">{tag}</a>
+			))}
+		</div>
+	)}
+</article>
+
+<style>
+	.post-card {
+		padding: 1.5em 0;
+		border-bottom: 1px solid rgba(var(--gray-light), 0.6);
+	}
+
+	.post-card:last-child {
+		border-bottom: none;
+	}
+
+	.post-title {
+		font-size: 1.35em;
+		font-weight: 600;
+		margin: 0 0 0.5em 0;
+		line-height: 1.4;
+		letter-spacing: -0.01em;
+	}
+
+	.post-link {
+		text-decoration: none;
+		color: rgb(var(--black));
+	}
+
+	.post-link:hover .post-title {
+		color: var(--accent);
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: rgb(var(--gray));
+		font-size: 0.875em;
+		margin-bottom: 0.75em;
+	}
+
+	.separator {
+		color: rgba(var(--gray), 0.4);
+	}
+
+	.category {
+		color: var(--accent);
+		text-decoration: none;
+		transition: opacity 0.2s;
+	}
+
+	.category:hover {
+		opacity: 0.7;
+	}
+
+	.post-description {
+		color: rgb(var(--black));
+		margin: 0;
+		line-height: 1.6;
+		opacity: 0.85;
+	}
+
+	.post-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+		margin-top: 0.75em;
+	}
+
+	.tag {
+		font-size: 0.8em;
+		padding: 0.25em 0.75em;
+		background: rgba(var(--gray-light), 0.6);
+		border-radius: 1em;
+		color: rgb(var(--gray-dark));
+		text-decoration: none;
+		transition: all 0.2s;
+	}
+
+	.tag:hover {
+		background: var(--accent);
+		color: white;
+	}
+</style>

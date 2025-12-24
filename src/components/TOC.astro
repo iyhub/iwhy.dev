@@ -1,0 +1,136 @@
+---
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// 只显示 h2 和 h3
+const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
+---
+
+{tocHeadings.length > 0 && (
+	<nav class="toc" aria-label="文章目录">
+		<div class="toc-title">目录</div>
+		<ul class="toc-list">
+			{tocHeadings.map((heading) => (
+				<li class:list={['toc-item', `depth-${heading.depth}`]}>
+					<a href={`#${heading.slug}`} class="toc-link">
+						{heading.text}
+					</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+)}
+
+<style>
+	.toc {
+		font-size: 0.875em;
+		line-height: 1.6;
+	}
+
+	.toc-title {
+		font-weight: 600;
+		color: rgb(var(--black));
+		margin-bottom: 0.75em;
+		font-size: 0.8em;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.toc-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.toc-item {
+		margin: 0.25em 0;
+	}
+
+	.toc-item.depth-3 {
+		padding-left: 1em;
+	}
+
+	.toc-link {
+		position: relative;
+		color: rgb(var(--gray));
+		text-decoration: none;
+		display: block;
+		padding: 0.25em 0 0.25em 0.75em;
+		transition: color 0.2s;
+	}
+
+	.toc-link::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 2px;
+		height: 1em;
+		background: transparent;
+		transition: background 0.2s;
+	}
+
+	.toc-link:hover {
+		color: var(--accent);
+	}
+
+	.toc-link.active {
+		color: var(--accent);
+	}
+
+	.toc-link.active::before {
+		background: var(--accent);
+	}
+</style>
+
+<script>
+	// 高亮当前阅读位置的标题
+	function initTOC() {
+		const tocLinks = document.querySelectorAll('.toc-link');
+		const headings = document.querySelectorAll('article h2, article h3');
+
+		if (tocLinks.length === 0 || headings.length === 0) return;
+
+		function updateActiveLink() {
+			const offset = 100;
+			let currentHeading = null;
+
+			// 找到所有已经滚过 offset 位置的标题中的最后一个
+			for (const heading of headings) {
+				const rect = heading.getBoundingClientRect();
+				if (rect.top <= offset) {
+					currentHeading = heading;
+				} else {
+					break; // 后面的标题还没滚到，可以停止
+				}
+			}
+
+			const currentId = currentHeading?.getAttribute('id') || '';
+
+			tocLinks.forEach((link) => {
+				link.classList.remove('active');
+				if (currentId && link.getAttribute('href') === `#${currentId}`) {
+					link.classList.add('active');
+				}
+			});
+		}
+
+		window.addEventListener('scroll', updateActiveLink, { passive: true });
+		updateActiveLink(); // 初始化时执行一次
+	}
+
+	// 页面加载后初始化
+	document.addEventListener('DOMContentLoaded', initTOC);
+	// Astro View Transitions 支持
+	document.addEventListener('astro:page-load', initTOC);
+</script>

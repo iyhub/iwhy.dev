@@ -1,5 +1,32 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
+// 站点全局配置
+export const SITE_TITLE = 'iWhy Blog';
+export const SITE_DESCRIPTION = '技术分享与生活随笔';
+export const SITE_AUTHOR = 'Cole';
 
-export const SITE_TITLE = 'Astro Blog';
-export const SITE_DESCRIPTION = 'Welcome to my website!';
+// 分类定义
+export const CATEGORIES = ['技术', '生活', '随笔'] as const;
+export type Category = typeof CATEGORIES[number];
+
+// 产品展示
+export interface Product {
+    name: string;
+    description: string;
+    url: string;
+    icon?: string;
+}
+
+export const PRODUCTS: Product[] = [
+    {
+        name: '示例产品 1',
+        description: '这是一个示例产品的描述',
+        url: 'https://example.com',
+        icon: '🚀',
+    },
+    {
+        name: '示例产品 2',
+        description: '另一个示例产品',
+        url: 'https://example.com',
+        icon: '✨',
+    },
+    // 在这里添加你的产品...
+];

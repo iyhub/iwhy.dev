@@ -1,0 +1,83 @@
+---
+interface Props {
+	name: string;
+	description: string;
+	url: string;
+	icon?: string;
+}
+
+const { name, description, url, icon } = Astro.props;
+---
+
+<a href={url} class="product-card" target="_blank" rel="noopener">
+	{icon && <span class="icon">{icon}</span>}
+	<div class="content">
+		<h3 class="name">{name}</h3>
+		<p class="description">{description}</p>
+	</div>
+	<span class="arrow">&rarr;</span>
+</a>
+
+<style>
+	.product-card {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		padding: 1.25em;
+		background: rgba(var(--gray-light), 0.3);
+		border-radius: 12px;
+		text-decoration: none;
+		transition: all 0.2s ease;
+	}
+
+	.product-card:hover {
+		background: rgba(var(--gray-light), 0.5);
+		transform: translateY(-2px);
+	}
+
+	.icon {
+		font-size: 2em;
+		flex-shrink: 0;
+	}
+
+	.content {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.name {
+		font-size: 1em;
+		font-weight: 600;
+		color: rgb(var(--black));
+		margin: 0 0 0.25em 0;
+		letter-spacing: -0.01em;
+	}
+
+	.description {
+		font-size: 0.875em;
+		color: rgb(var(--gray));
+		margin: 0;
+		line-height: 1.4;
+	}
+
+	.arrow {
+		color: rgb(var(--gray));
+		font-size: 1.25em;
+		transition: transform 0.2s;
+	}
+
+	.product-card:hover .arrow {
+		transform: translateX(4px);
+		color: var(--accent);
+	}
+
+	@media (max-width: 480px) {
+		.product-card {
+			padding: 1em;
+		}
+
+		.icon {
+			font-size: 1.5em;
+		}
+	}
+</style>

@@ -1,0 +1,207 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import TOC from '../../components/TOC.astro';
+
+export async function getStaticPaths() {
+	const items = (await getCollection('weekly', ({ data }) => data.draft !== true))
+		.sort((a, b) => b.data.issue - a.data.issue);
+
+	return items.map((item, index) => ({
+		params: { slug: item.id },
+		props: {
+			item,
+			prevItem: items[index + 1] || null,
+			nextItem: items[index - 1] || null,
+		},
+	}));
+}
+
+const { item, prevItem, nextItem } = Astro.props;
+const { Content, headings } = await render(item);
+const { title, date, description, issue } = item.data;
+const hasTOC = headings.filter(h => h.depth === 2 || h.depth === 3).length > 0;
+
+const formattedDate = date.toLocaleDateString('zh-CN', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={title} description={description || title} />
+	</head>
+	<body>
+		<Header />
+		<div class="pick-container">
+			<main>
+				<article>
+					<header class="pick-header">
+						<span class="pick-issue">#{issue}</span>
+						<h1>{title}</h1>
+						<time datetime={date.toISOString()}>{formattedDate}</time>
+					</header>
+					<div class="prose max-w-none">
+						<Content />
+					</div>
+				</article>
+				<nav class="pick-nav">
+					{prevItem && (
+						<a href={`/weekly/${prevItem.id}`} class="nav-prev">
+							<span class="nav-label">上一期</span>
+							<span class="nav-title">#{prevItem.data.issue}</span>
+						</a>
+					)}
+					{nextItem && (
+						<a href={`/weekly/${nextItem.id}`} class="nav-next">
+							<span class="nav-label">下一期</span>
+							<span class="nav-title">#{nextItem.data.issue}</span>
+						</a>
+					)}
+				</nav>
+			</main>
+			{hasTOC && (
+				<aside class="toc-sidebar">
+					<div class="toc-wrapper">
+						<TOC headings={headings} />
+					</div>
+				</aside>
+			)}
+		</div>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.pick-container {
+		position: relative;
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 1.5em 1em 3em;
+	}
+
+	/* TOC 侧边栏 */
+	.toc-sidebar {
+		position: fixed;
+		left: calc(50% + 400px);
+		top: 100px;
+		width: 200px;
+	}
+
+	.toc-wrapper {
+		max-height: calc(100vh - 140px);
+		overflow-y: auto;
+	}
+
+	@media (max-width: 1200px) {
+		.toc-sidebar {
+			display: none;
+		}
+	}
+
+	.pick-header {
+		margin-bottom: 2em;
+		padding-bottom: 1em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+	}
+
+	.pick-issue {
+		display: inline-block;
+		font-size: 0.875em;
+		font-weight: 600;
+		color: var(--accent);
+		margin-bottom: 0.5em;
+	}
+
+	.pick-header h1 {
+		font-size: 1.75em;
+		margin: 0 0 0.25em 0;
+		line-height: 1.3;
+	}
+
+	.pick-header time {
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+	}
+
+	/* 紧凑排版 */
+	.prose {
+		line-height: 1.7;
+		font-size: 0.95em;
+	}
+
+	.prose :global(p) {
+		margin-top: 0.75em;
+		margin-bottom: 0.75em;
+	}
+
+	.prose :global(h2) {
+		margin-top: 1.5em;
+		margin-bottom: 0.5em;
+		font-size: 1.25em;
+		scroll-margin-top: 80px;
+	}
+
+	.prose :global(h3) {
+		margin-top: 1.25em;
+		margin-bottom: 0.4em;
+		font-size: 1.1em;
+		scroll-margin-top: 80px;
+	}
+
+	.prose :global(ul),
+	.prose :global(ol) {
+		padding-left: 1.5em;
+		margin: 0.75em 0;
+	}
+
+	.prose :global(li) {
+		margin: 0.35em 0;
+	}
+
+	.pick-nav {
+		display: flex;
+		justify-content: space-between;
+		gap: 1.5em;
+		margin-top: 3em;
+		padding-top: 1.5em;
+		border-top: 1px solid rgb(var(--gray-light));
+	}
+
+	.pick-nav a {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25em;
+		text-decoration: none;
+	}
+
+	.nav-prev {
+		align-items: flex-start;
+	}
+
+	.nav-next {
+		align-items: flex-end;
+		margin-left: auto;
+	}
+
+	.nav-label {
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.nav-title {
+		color: var(--accent);
+		font-weight: 600;
+	}
+
+	.pick-nav a:hover .nav-title {
+		opacity: 0.7;
+	}
+</style>

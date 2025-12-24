@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const weekly = (await getCollection('weekly', ({ data }) => data.draft !== true))
+	.sort((a, b) => b.data.issue - a.data.issue);
+---
+
+<BaseLayout title="周刊" description="每周精选的产品、工具和文章">
+	<section class="picks-page">
+		<header class="page-header">
+			<h1>周刊</h1>
+			<p class="page-desc">每周发现的有趣产品、工具和文章</p>
+		</header>
+
+		{weekly.length > 0 ? (
+			<div class="picks-list">
+				{weekly.map((item) => (
+					<a href={`/weekly/${item.id}`} class="pick-card">
+						<span class="pick-issue">#{item.data.issue}</span>
+						<div class="pick-content">
+							<h2 class="pick-title">{item.data.title}</h2>
+							<time class="pick-date">
+								{item.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+							</time>
+							{item.data.description && (
+								<p class="pick-desc">{item.data.description}</p>
+							)}
+						</div>
+					</a>
+				))}
+			</div>
+		) : (
+			<p class="no-picks">暂无精选内容</p>
+		)}
+	</section>
+</BaseLayout>
+
+<style>
+	.picks-page {
+		padding: 1em 0;
+	}
+
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.page-header h1 {
+		font-size: 1.75em;
+		margin: 0 0 0.25em 0;
+	}
+
+	.page-desc {
+		color: rgb(var(--gray));
+		margin: 0;
+	}
+
+	.picks-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+	}
+
+	.pick-card {
+		display: flex;
+		align-items: flex-start;
+		gap: 1em;
+		padding: 1.25em;
+		background: rgba(var(--gray-light), 0.5);
+		border-radius: 8px;
+		text-decoration: none;
+		transition: background 0.2s;
+	}
+
+	.pick-card:hover {
+		background: rgba(var(--gray-light), 0.8);
+	}
+
+	.pick-issue {
+		font-size: 0.875em;
+		font-weight: 600;
+		color: var(--accent);
+		white-space: nowrap;
+	}
+
+	.pick-content {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.pick-title {
+		font-size: 1.1em;
+		font-weight: 600;
+		color: rgb(var(--black));
+		margin: 0 0 0.25em 0;
+		line-height: 1.4;
+	}
+
+	.pick-card:hover .pick-title {
+		color: var(--accent);
+	}
+
+	.pick-date {
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+	}
+
+	.pick-desc {
+		font-size: 0.875em;
+		color: rgb(var(--black));
+		opacity: 0.85;
+		margin: 0.5em 0 0 0;
+		line-height: 1.5;
+	}
+
+	.no-picks {
+		color: rgb(var(--gray));
+		text-align: center;
+		padding: 3em 0;
+	}
+</style>

@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+	const posts = (await getCollection('posts', ({ data }) => data.draft !== true))
+		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+	return posts.map((post, index) => {
+		// 同分类推荐文章（排除当前文章，最多3篇）
+		const relatedPosts = posts
+			.filter(p => p.id !== post.id && p.data.category === post.data.category)
+			.slice(0, 3);
+
+		return {
+			params: { slug: post.id },
+			props: {
+				post,
+				prevPost: posts[index + 1] || null,
+				nextPost: posts[index - 1] || null,
+				relatedPosts,
+			},
+		};
+	});
+}
+
+const { post, prevPost, nextPost, relatedPosts } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<PostLayout post={post} headings={headings} prevPost={prevPost} nextPost={nextPost} relatedPosts={relatedPosts}>
+	<Content />
+</PostLayout>

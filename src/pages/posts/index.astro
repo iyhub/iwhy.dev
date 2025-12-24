@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => data.draft !== true))
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="全部文章" description="博客文章列表">
+	<section class="posts-page">
+		<header class="page-header">
+			<h1>全部文章</h1>
+			<p class="page-desc">共 {posts.length} 篇文章</p>
+		</header>
+
+		{posts.length > 0 ? (
+			<div class="post-list">
+				{posts.map((post) => (
+					<PostCard
+						title={post.data.title}
+						description={post.data.description}
+						date={post.data.date}
+						category={post.data.category}
+						tags={post.data.tags}
+						slug={post.id}
+					/>
+				))}
+			</div>
+		) : (
+			<p class="no-posts">暂无文章</p>
+		)}
+	</section>
+</BaseLayout>
+
+<style>
+	.posts-page {
+		padding: 1em 0;
+	}
+
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.page-header h1 {
+		font-size: 1.75em;
+		margin: 0 0 0.25em 0;
+	}
+
+	.page-desc {
+		color: rgb(var(--gray));
+		margin: 0;
+	}
+
+	.post-list {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.no-posts {
+		color: rgb(var(--gray));
+		text-align: center;
+		padding: 3em 0;
+	}
+</style>

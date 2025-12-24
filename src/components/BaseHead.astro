@@ -4,17 +4,53 @@
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
 import FallbackImage from '../assets/blog-placeholder-1.jpg';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, SITE_AUTHOR } from '../consts';
 
 interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	article?: {
+		publishedTime: Date;
+		modifiedTime?: Date;
+		author?: string;
+		tags?: string[];
+	};
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = FallbackImage } = Astro.props;
+const { title, description, image = FallbackImage, article } = Astro.props;
+
+// JSON-LD 结构化数据
+const websiteSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'WebSite',
+	name: SITE_TITLE,
+	url: Astro.site,
+};
+
+const articleSchema = article ? {
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	headline: title,
+	description: description,
+	image: new URL(image.src, Astro.url).toString(),
+	datePublished: article.publishedTime.toISOString(),
+	dateModified: (article.modifiedTime || article.publishedTime).toISOString(),
+	author: {
+		'@type': 'Person',
+		name: article.author || SITE_AUTHOR,
+	},
+	publisher: {
+		'@type': 'Person',
+		name: SITE_AUTHOR,
+	},
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': canonicalURL.toString(),
+	},
+} : null;
 ---
 
 <!-- Global Metadata -->
@@ -31,8 +67,9 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -55,3 +92,9 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+
+<!-- JSON-LD -->
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+{articleSchema && (
+	<script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+)}

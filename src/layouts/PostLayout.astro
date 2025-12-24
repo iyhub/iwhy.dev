@@ -1,0 +1,368 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import TOC from '../components/TOC.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	post: CollectionEntry<'posts'>;
+	headings?: Heading[];
+	prevPost?: CollectionEntry<'posts'> | null;
+	nextPost?: CollectionEntry<'posts'> | null;
+	relatedPosts?: CollectionEntry<'posts'>[];
+}
+
+const { post, headings = [], prevPost, nextPost, relatedPosts = [] } = Astro.props;
+const { title, date, category, tags, description, cover } = post.data;
+const hasTOC = headings.filter(h => h.depth === 2 || h.depth === 3).length > 0;
+
+const formattedDate = date.toLocaleDateString('zh-CN', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead
+			title={title}
+			description={description || title}
+			image={cover}
+			article={{
+				publishedTime: date,
+				modifiedTime: post.data.updatedDate,
+				tags: tags,
+			}}
+		/>
+	</head>
+	<body>
+		<Header />
+		<div class:list={['post-container', { 'has-toc': hasTOC }]}>
+			<main>
+				<article>
+					<header class="post-header">
+						<h1>{title}</h1>
+						<div class="post-meta">
+							<time datetime={date.toISOString()}>{formattedDate}</time>
+							<span class="separator">·</span>
+							<a href={`/categories/${category}`} class="category">{category}</a>
+						</div>
+						{tags && tags.length > 0 && (
+							<div class="post-tags">
+								{tags.map(tag => (
+									<a href={`/tags/${tag}`} class="tag">{tag}</a>
+								))}
+							</div>
+						)}
+					</header>
+					<div class="prose max-w-none">
+						<slot />
+					</div>
+				</article>
+				{relatedPosts.length > 0 && (
+					<section class="related-posts">
+						<h3 class="related-title">相关文章</h3>
+						<div class="related-list">
+							{relatedPosts.map((p) => (
+								<a href={`/posts/${p.id}`} class="related-card">
+									<span class="related-card-title">{p.data.title}</span>
+									<span class="related-card-date">
+										{p.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}
+									</span>
+									{p.data.description && (
+										<span class="related-card-desc">{p.data.description}</span>
+									)}
+								</a>
+							))}
+						</div>
+					</section>
+				)}
+				<nav class="post-nav">
+					{prevPost && (
+						<a href={`/posts/${prevPost.id}`} class="nav-prev">
+							<span class="nav-label">上一篇</span>
+							<span class="nav-title">{prevPost.data.title}</span>
+						</a>
+					)}
+					{nextPost && (
+						<a href={`/posts/${nextPost.id}`} class="nav-next">
+							<span class="nav-label">下一篇</span>
+							<span class="nav-title">{nextPost.data.title}</span>
+						</a>
+					)}
+				</nav>
+			</main>
+			{hasTOC && (
+				<aside class="toc-sidebar">
+					<div class="toc-wrapper">
+						<TOC headings={headings} />
+					</div>
+				</aside>
+			)}
+		</div>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	/* 布局容器 - 文章始终居中 */
+	.post-container {
+		position: relative;
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 1.5em 1em 3em;
+	}
+
+	/* TOC 侧边栏 - 固定在右侧空白区域 */
+	.toc-sidebar {
+		position: fixed;
+		left: calc(50% + 400px);
+		top: 100px;
+		width: 200px;
+	}
+
+	.toc-wrapper {
+		max-height: calc(100vh - 140px);
+		overflow-y: auto;
+	}
+
+	/* 文章头部 */
+	.post-header {
+		margin-bottom: 2em;
+		padding-bottom: 1.5em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+	}
+
+	.post-header h1 {
+		font-size: 2em;
+		margin: 0 0 0.5em 0;
+		line-height: 1.3;
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: rgb(var(--gray));
+		font-size: 0.95em;
+	}
+
+	.separator {
+		color: rgb(var(--gray-light));
+	}
+
+	.category {
+		color: var(--accent);
+		text-decoration: none;
+		transition: opacity 0.2s;
+	}
+
+	.category:hover {
+		opacity: 0.7;
+	}
+
+	.post-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+		margin-top: 1em;
+	}
+
+	.tag {
+		font-size: 0.85em;
+		padding: 0.25em 0.75em;
+		background: rgb(var(--gray-light));
+		border-radius: 1em;
+		color: rgb(var(--gray-dark));
+		text-decoration: none;
+		transition: all 0.2s;
+	}
+
+	.tag:hover {
+		background: var(--accent);
+		color: white;
+	}
+
+	/* 文章内容 - 紧凑排版 */
+	.prose {
+		line-height: 1.7;
+		font-size: 0.95em;
+	}
+
+	.prose :global(p) {
+		margin-top: 0.75em;
+		margin-bottom: 0.75em;
+	}
+
+	.prose :global(h2) {
+		margin-top: 1.5em;
+		margin-bottom: 0.5em;
+		padding-bottom: 0.25em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+		scroll-margin-top: 80px;
+	}
+
+	.prose :global(h3) {
+		margin-top: 1.25em;
+		margin-bottom: 0.4em;
+		scroll-margin-top: 80px;
+	}
+
+	.prose :global(pre) {
+		background: rgb(var(--gray-dark));
+		color: #fff;
+		margin: 1em 0;
+	}
+
+	.prose :global(ul),
+	.prose :global(ol) {
+		padding-left: 1.5em;
+		margin: 0.75em 0;
+	}
+
+	.prose :global(li) {
+		margin: 0.35em 0;
+	}
+
+	.prose :global(blockquote) {
+		margin: 1em 0;
+	}
+
+	/* 相关文章 */
+	.related-posts {
+		margin-top: 3em;
+		padding-top: 1.5em;
+		border-top: 1px solid rgb(var(--gray-light));
+	}
+
+	.related-title {
+		font-size: 0.875em;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: rgb(var(--gray));
+		margin: 0 0 1em 0;
+	}
+
+	.related-list {
+		display: grid;
+		gap: 1em;
+	}
+
+	.related-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25em;
+		padding: 1em;
+		background: rgba(var(--gray-light), 0.5);
+		border-radius: 8px;
+		text-decoration: none;
+		transition: background 0.2s;
+	}
+
+	.related-card:hover {
+		background: rgba(var(--gray-light), 0.8);
+	}
+
+	.related-card-title {
+		font-weight: 500;
+		color: rgb(var(--black));
+		line-height: 1.4;
+	}
+
+	.related-card:hover .related-card-title {
+		color: var(--accent);
+	}
+
+	.related-card-date {
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+	}
+
+	.related-card-desc {
+		font-size: 0.875em;
+		color: rgb(var(--black));
+		opacity: 0.85;
+		line-height: 1.5;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.post-nav {
+		display: flex;
+		justify-content: space-between;
+		gap: 1.5em;
+		margin-top: 3em;
+		padding-top: 1.5em;
+		border-top: 1px solid rgb(var(--gray-light));
+	}
+
+	.post-nav a {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25em;
+		text-decoration: none;
+		max-width: 45%;
+	}
+
+	.nav-prev {
+		align-items: flex-start;
+	}
+
+	.nav-next {
+		align-items: flex-end;
+		margin-left: auto;
+	}
+
+	.nav-label {
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.nav-title {
+		color: rgb(var(--black));
+		font-weight: 500;
+		line-height: 1.4;
+		transition: color 0.2s;
+	}
+
+	.post-nav a:hover .nav-title {
+		color: var(--accent);
+	}
+
+	/* 响应式：屏幕不够宽时隐藏 TOC */
+	@media (max-width: 1200px) {
+		.toc-sidebar {
+			display: none;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.post-container {
+			padding: 1.5em 1em;
+		}
+
+		.post-header h1 {
+			font-size: 1.5em;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.post-container {
+			padding: 1em 0.75em;
+		}
+	}
+</style>

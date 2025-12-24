@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('posts', ({ data }) => data.draft !== true);
+	const categories = [...new Set(posts.map(post => post.data.category))];
+
+	return categories.map(category => ({
+		params: { category },
+		props: {
+			posts: posts
+				.filter(post => post.data.category === category)
+				.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+		},
+	}));
+}
+
+const { category } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<BaseLayout title={`${category} - 分类`} description={`${category}分类下的所有文章`}>
+	<header class="page-header">
+		<a href="/categories" class="back">&larr; 所有分类</a>
+		<h1>{category}</h1>
+		<p class="count">共 {posts.length} 篇文章</p>
+	</header>
+
+	<div class="post-list">
+		{posts.map((post) => (
+			<PostCard
+				title={post.data.title}
+				description={post.data.description}
+				date={post.data.date}
+				category={post.data.category}
+				tags={post.data.tags}
+				slug={post.id}
+			/>
+		))}
+	</div>
+</BaseLayout>
+
+<style>
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.back {
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+		text-decoration: none;
+	}
+
+	.back:hover {
+		color: var(--accent);
+	}
+
+	h1 {
+		margin: 0.5em 0 0.25em;
+	}
+
+	.count {
+		color: rgb(var(--gray));
+		margin: 0;
+	}
+
+	.post-list {
+		display: flex;
+		flex-direction: column;
+	}
+</style>

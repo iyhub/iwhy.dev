@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts', ({ data }) => data.draft !== true);
+
+// 统计每个标签的文章数
+const tagCount = posts.reduce((acc, post) => {
+	const tags = post.data.tags || [];
+	tags.forEach(tag => {
+		acc[tag] = (acc[tag] || 0) + 1;
+	});
+	return acc;
+}, {} as Record<string, number>);
+
+const tags = Object.entries(tagCount).sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title="标签" description="按标签浏览文章">
+	<h1>标签</h1>
+	{tags.length > 0 ? (
+		<div class="tag-cloud">
+			{tags.map(([tag, count]) => (
+				<a href={`/tags/${tag}`} class="tag">
+					{tag}
+					<span class="count">{count}</span>
+				</a>
+			))}
+		</div>
+	) : (
+		<p class="empty">暂无标签</p>
+	)}
+</BaseLayout>
+
+<style>
+	h1 {
+		margin-bottom: 1.5em;
+	}
+
+	.tag-cloud {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75em;
+	}
+
+	.tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		padding: 0.5em 1em;
+		background: rgb(var(--gray-light));
+		border-radius: 2em;
+		text-decoration: none;
+		color: rgb(var(--gray-dark));
+		transition: all 0.2s;
+	}
+
+	.tag:hover {
+		background: var(--accent);
+		color: white;
+	}
+
+	.tag:hover .count {
+		background: rgba(255, 255, 255, 0.2);
+		color: white;
+	}
+
+	.count {
+		font-size: 0.8em;
+		background: rgba(var(--gray), 0.2);
+		padding: 0.1em 0.5em;
+		border-radius: 1em;
+		color: rgb(var(--gray));
+	}
+
+	.empty {
+		color: rgb(var(--gray));
+	}
+</style>

@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('posts', ({ data }) => data.draft !== true);
+
+	// 收集所有标签
+	const allTags = new Set<string>();
+	posts.forEach(post => {
+		post.data.tags?.forEach(tag => allTags.add(tag));
+	});
+
+	return [...allTags].map(tag => ({
+		params: { tag },
+		props: {
+			posts: posts
+				.filter(post => post.data.tags?.includes(tag))
+				.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+		},
+	}));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<BaseLayout title={`${tag} - 标签`} description={`标签 ${tag} 下的所有文章`}>
+	<header class="page-header">
+		<a href="/tags" class="back">&larr; 所有标签</a>
+		<h1>#{tag}</h1>
+		<p class="count">共 {posts.length} 篇文章</p>
+	</header>
+
+	<div class="post-list">
+		{posts.map((post) => (
+			<PostCard
+				title={post.data.title}
+				description={post.data.description}
+				date={post.data.date}
+				category={post.data.category}
+				tags={post.data.tags}
+				slug={post.id}
+			/>
+		))}
+	</div>
+</BaseLayout>
+
+<style>
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.back {
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+		text-decoration: none;
+	}
+
+	.back:hover {
+		color: var(--accent);
+	}
+
+	h1 {
+		margin: 0.5em 0 0.25em;
+		color: var(--accent);
+	}
+
+	.count {
+		color: rgb(var(--gray));
+		margin: 0;
+	}
+
+	.post-list {
+		display: flex;
+		flex-direction: column;
+	}
+</style>
