@@ -103,10 +103,20 @@ const articleSchema = article ? {
 <!-- Dark mode initialization (must run before body renders to prevent flash) -->
 <script is:inline>
 	(function() {
-		const theme = localStorage.getItem('theme');
-		if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-			document.documentElement.classList.add('dark');
+		function applyTheme() {
+			const theme = localStorage.getItem('theme');
+			if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
 		}
+
+		// Apply theme on initial load
+		applyTheme();
+
+		// Re-apply theme after View Transitions swap
+		document.addEventListener('astro:after-swap', applyTheme);
 	})();
 </script>
 
