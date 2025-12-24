@@ -43,6 +43,14 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 				tags: tags,
 			}}
 		/>
+		<script is:inline>
+			(function() {
+				const theme = localStorage.getItem('theme');
+				if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+					document.documentElement.classList.add('dark');
+				}
+			})();
+		</script>
 	</head>
 	<body>
 		<Header />

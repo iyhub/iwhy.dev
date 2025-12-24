@@ -1,5 +1,6 @@
 ---
 import { SITE_TITLE } from '../consts';
+import ThemeToggle from './ThemeToggle.astro';
 
 const pathname = Astro.url.pathname;
 
@@ -14,12 +15,15 @@ function isActive(href: string) {
 <header>
 	<nav>
 		<a href="/" class="site-title">{SITE_TITLE}</a>
-		<div class="nav-links">
-			<a href="/" class:list={[{ active: isActive('/') }]}>首页</a>
-			<a href="/weekly" class:list={[{ active: isActive('/weekly') }]}>周刊</a>
-			<a href="/categories" class:list={[{ active: isActive('/categories') }]}>分类</a>
-			<a href="/tags" class:list={[{ active: isActive('/tags') }]}>标签</a>
-			<a href="/about" class:list={[{ active: isActive('/about') }]}>关于</a>
+		<div class="nav-right">
+			<div class="nav-links">
+				<a href="/" class:list={[{ active: isActive('/') }]}>首页</a>
+				<a href="/weekly" class:list={[{ active: isActive('/weekly') }]}>周刊</a>
+				<a href="/categories" class:list={[{ active: isActive('/categories') }]}>分类</a>
+				<a href="/tags" class:list={[{ active: isActive('/tags') }]}>标签</a>
+				<a href="/about" class:list={[{ active: isActive('/about') }]}>关于</a>
+			</div>
+			<ThemeToggle />
 		</div>
 	</nav>
 </header>
@@ -29,10 +33,10 @@ function isActive(href: string) {
 		position: sticky;
 		top: 0;
 		z-index: 100;
-		background: rgba(255, 255, 255, 0.8);
+		background: var(--header-bg);
 		backdrop-filter: saturate(180%) blur(20px);
 		-webkit-backdrop-filter: saturate(180%) blur(20px);
-		border-bottom: 1px solid rgba(var(--gray-light), 0.8);
+		border-bottom: 1px solid var(--header-border);
 	}
 
 	nav {
@@ -42,6 +46,12 @@ function isActive(href: string) {
 		max-width: 720px;
 		margin: 0 auto;
 		padding: 0.875em 1em;
+	}
+
+	.nav-right {
+		display: flex;
+		align-items: center;
+		gap: 1em;
 	}
 
 	.site-title {
@@ -86,6 +96,10 @@ function isActive(href: string) {
 			font-size: 1.1em;
 		}
 
+		.nav-right {
+			gap: 0.75em;
+		}
+
 		.nav-links {
 			gap: 0.75em;
 			font-size: 0.9em;
@@ -97,6 +111,10 @@ function isActive(href: string) {
 	}
 
 	@media (max-width: 480px) {
+		.nav-right {
+			gap: 0.5em;
+		}
+
 		.nav-links {
 			gap: 0.5em;
 			font-size: 0.85em;

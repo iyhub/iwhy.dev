@@ -9,14 +9,32 @@
 	--font-body: "LXGW WenKai", 楷体, STKaiti, serif;
 	--font-code: "JetBrains Mono", "Fira Code", monospace;
 
-	/* Apple-inspired color palette */
+	/* Apple-inspired color palette - Light mode */
 	--accent: #007AFF;
-	--accent-dark: #0056CC;
+	--accent-hover: #0056CC;
 	--black: 28, 28, 30;
 	--gray: 142, 142, 147;
 	--gray-light: 242, 242, 247;
 	--gray-dark: 72, 72, 74;
 	--background: 255, 255, 255;
+
+	/* Header background for glassmorphism */
+	--header-bg: rgba(255, 255, 255, 0.8);
+	--header-border: rgba(242, 242, 247, 0.8);
+}
+
+/* Dark mode */
+:root.dark {
+	--accent: #0A84FF;
+	--accent-hover: #409CFF;
+	--black: 255, 255, 255;
+	--gray: 142, 142, 147;
+	--gray-light: 44, 44, 46;
+	--gray-dark: 209, 209, 214;
+	--background: 28, 28, 30;
+
+	--header-bg: rgba(28, 28, 30, 0.8);
+	--header-border: rgba(44, 44, 46, 0.8);
 }
 
 body {
@@ -32,6 +50,14 @@ body {
 	line-height: 1.75;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Theme transition */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
 main {
@@ -62,7 +88,7 @@ a {
 }
 
 a:hover {
-	color: var(--accent-dark);
+	color: var(--accent-hover);
 }
 
 p {
@@ -121,6 +147,12 @@ table {
 	--tw-prose-headings: rgb(var(--black));
 	--tw-prose-links: var(--accent);
 	--tw-prose-code: rgb(var(--gray-dark));
+	--tw-prose-bold: rgb(var(--black));
+	--tw-prose-quotes: rgb(var(--gray));
+	--tw-prose-quote-borders: var(--accent);
+	--tw-prose-hr: rgb(var(--gray-light));
+	--tw-prose-th-borders: rgb(var(--gray-light));
+	--tw-prose-td-borders: rgb(var(--gray-light));
 	font-family: var(--font-body);
 }
 
