@@ -116,6 +116,60 @@ pre > code {
 	font-family: var(--font-code);
 }
 
+/* Code block wrapper with copy button */
+.code-block-wrapper {
+	position: relative;
+}
+
+.code-copy-btn {
+	position: absolute;
+	top: 0.5em;
+	right: 0.5em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: none;
+	border-radius: 6px;
+	background: rgba(255, 255, 255, 0.1);
+	color: rgba(255, 255, 255, 0.7);
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+}
+
+.code-block-wrapper:hover .code-copy-btn {
+	opacity: 1;
+}
+
+.code-copy-btn:hover {
+	background: rgba(255, 255, 255, 0.2);
+	color: #fff;
+}
+
+.code-copy-btn:active {
+	transform: scale(0.9);
+}
+
+.code-copy-btn .copy-icon {
+	display: block;
+}
+
+.code-copy-btn .check-icon {
+	display: none;
+	color: #34C759;
+}
+
+.code-copy-btn.copied .copy-icon {
+	display: none;
+}
+
+.code-copy-btn.copied .check-icon {
+	display: block;
+}
+
 img {
 	max-width: 100%;
 	height: auto;

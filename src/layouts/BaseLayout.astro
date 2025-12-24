@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CodeCopy from '../components/CodeCopy.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import type { ImageMetadata } from 'astro';
 
@@ -37,5 +38,6 @@ const {
 			<slot />
 		</main>
 		<Footer />
+		<CodeCopy />
 	</body>
 </html>

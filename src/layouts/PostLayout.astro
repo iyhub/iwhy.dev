@@ -3,6 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import TOC from '../components/TOC.astro';
+import CodeCopy from '../components/CodeCopy.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Heading {
@@ -118,6 +119,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 			)}
 		</div>
 		<Footer />
+		<CodeCopy />
 	</body>
 </html>
 
