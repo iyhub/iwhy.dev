@@ -17,9 +17,9 @@ const weekly = (await getCollection('weekly', ({ data }) => data.draft !== true)
 			<div class="picks-list">
 				{weekly.map((item) => (
 					<a href={`/weekly/${item.id}`} class="pick-card">
-						<span class="pick-issue">#{item.data.issue}</span>
+						<span class="pick-issue" transition:name={`weekly-issue-${item.id}`}>#{item.data.issue}</span>
 						<div class="pick-content">
-							<h2 class="pick-title">{item.data.title}</h2>
+							<h2 class="pick-title" transition:name={`weekly-title-${item.id}`}>{item.data.title}</h2>
 							<time class="pick-date">
 								{item.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
 							</time>

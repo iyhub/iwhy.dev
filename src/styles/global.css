@@ -273,3 +273,30 @@ table {
 	clip-path: inset(50%);
 	white-space: nowrap;
 }
+
+/* View Transitions - 页面过渡动画 */
+::view-transition-old(root) {
+	animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+	           180ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+}
+
+::view-transition-new(root) {
+	animation: 180ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+	           180ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
+
+@keyframes fade-in {
+	from { opacity: 0; }
+}
+
+@keyframes fade-out {
+	to { opacity: 0; }
+}
+
+@keyframes slide-from-right {
+	from { transform: translateX(20px); }
+}
+
+@keyframes slide-to-left {
+	to { transform: translateX(-20px); }
+}

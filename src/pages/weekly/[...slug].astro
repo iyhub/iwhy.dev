@@ -50,8 +50,8 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 				</nav>
 				<article>
 					<header class="pick-header">
-						<span class="pick-issue">#{issue}</span>
-						<h1>{title}</h1>
+						<span class="pick-issue" transition:name={`weekly-issue-${item.id}`}>#{issue}</span>
+						<h1 transition:name={`weekly-title-${item.id}`}>{title}</h1>
 						<time datetime={date.toISOString()}>{formattedDate}</time>
 					</header>
 					<div class="prose max-w-none">
