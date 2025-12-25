@@ -18,14 +18,33 @@ function isActive(href: string) {
 		<div class="nav-right">
 			<div class="nav-links">
 				<a href="/" class:list={[{ active: isActive('/') }]}>首页</a>
-				<a href="/weekly" class:list={[{ active: isActive('/weekly') }]}>周刊</a>
 				<a href="/categories" class:list={[{ active: isActive('/categories') }]}>分类</a>
 				<a href="/tags" class:list={[{ active: isActive('/tags') }]}>标签</a>
+				<a href="/weekly" class:list={[{ active: isActive('/weekly') }]}>周刊</a>
 				<a href="/about" class:list={[{ active: isActive('/about') }]}>关于</a>
 			</div>
 			<ThemeToggle />
+			<button id="menu-toggle" type="button" aria-label="菜单" aria-expanded="false">
+				<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="3" y1="6" x2="21" y2="6"></line>
+					<line x1="3" y1="12" x2="21" y2="12"></line>
+					<line x1="3" y1="18" x2="21" y2="18"></line>
+				</svg>
+				<svg class="close-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="18" y1="6" x2="6" y2="18"></line>
+					<line x1="6" y1="6" x2="18" y2="18"></line>
+				</svg>
+			</button>
 		</div>
 	</nav>
+	<div class="mobile-menu">
+		<a href="/" class:list={[{ active: isActive('/') }]}>首页</a>
+		<a href="/weekly" class:list={[{ active: isActive('/weekly') }]}>周刊</a>
+		<a href="/categories" class:list={[{ active: isActive('/categories') }]}>分类</a>
+		<a href="/tags" class:list={[{ active: isActive('/tags') }]}>标签</a>
+		<a href="/about" class:list={[{ active: isActive('/about') }]}>关于</a>
+	</div>
+	<div class="menu-overlay"></div>
 </header>
 
 <style>
@@ -87,7 +106,111 @@ function isActive(href: string) {
 		font-weight: 500;
 	}
 
-	@media (max-width: 720px) {
+	/* Mobile menu button */
+	#menu-toggle {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		background: transparent;
+		color: rgb(var(--black));
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+	}
+
+	#menu-toggle:hover {
+		background: rgb(var(--gray-light));
+	}
+
+	#menu-toggle .close-icon {
+		display: none;
+	}
+
+	#menu-toggle.open .menu-icon {
+		display: none;
+	}
+
+	#menu-toggle.open .close-icon {
+		display: block;
+	}
+
+	/* Mobile menu */
+	.mobile-menu {
+		display: none;
+		flex-direction: column;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		padding: 0.5em 1em 1em;
+		background: rgb(var(--background));
+		border-bottom: 1px solid var(--header-border);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.mobile-menu a {
+		display: block;
+		padding: 0.75em 0;
+		color: rgb(var(--black));
+		text-decoration: none;
+		text-align: center;
+		font-size: 1em;
+		border-bottom: 1px solid var(--header-border);
+		transition: color 0.2s ease;
+	}
+
+	.mobile-menu a:last-child {
+		border-bottom: none;
+	}
+
+	.mobile-menu a:hover,
+	.mobile-menu a.active {
+		color: var(--accent);
+	}
+
+	.mobile-menu a.active {
+		font-weight: 500;
+	}
+
+	/* Overlay to block content interaction */
+	.menu-overlay {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: -1;
+	}
+
+	.menu-overlay.open {
+		display: block;
+	}
+
+	/* Prevent body scroll when menu is open */
+	:global(body.menu-open) {
+		overflow: hidden;
+	}
+
+	@media (max-width: 640px) {
+		.nav-links {
+			display: none;
+		}
+
+		#menu-toggle {
+			display: flex;
+		}
+
+		.mobile-menu.open {
+			display: flex;
+		}
+	}
+
+	@media (max-width: 720px) and (min-width: 641px) {
 		nav {
 			padding: 0.75em 1em;
 		}
@@ -109,15 +232,51 @@ function isActive(href: string) {
 			padding: 0.25em 0;
 		}
 	}
-
-	@media (max-width: 480px) {
-		.nav-right {
-			gap: 0.5em;
-		}
-
-		.nav-links {
-			gap: 0.5em;
-			font-size: 0.85em;
-		}
-	}
 </style>
+
+<script>
+	function setupMobileMenu() {
+		const toggle = document.getElementById('menu-toggle');
+		const menu = document.querySelector('.mobile-menu');
+		const overlay = document.querySelector('.menu-overlay');
+		if (!toggle || !menu || !overlay) return;
+
+		function closeMenu() {
+			toggle.classList.remove('open');
+			menu.classList.remove('open');
+			overlay.classList.remove('open');
+			document.body.classList.remove('menu-open');
+			toggle.setAttribute('aria-expanded', 'false');
+		}
+
+		function openMenu() {
+			toggle.classList.add('open');
+			menu.classList.add('open');
+			overlay.classList.add('open');
+			document.body.classList.add('menu-open');
+			toggle.setAttribute('aria-expanded', 'true');
+		}
+
+		// Reset state on page navigation
+		closeMenu();
+
+		toggle.addEventListener('click', () => {
+			if (toggle.classList.contains('open')) {
+				closeMenu();
+			} else {
+				openMenu();
+			}
+		});
+
+		// Close menu when clicking overlay
+		overlay.addEventListener('click', closeMenu);
+
+		// Close menu when clicking a link
+		menu.querySelectorAll('a').forEach(link => {
+			link.addEventListener('click', closeMenu);
+		});
+	}
+
+	setupMobileMenu();
+	document.addEventListener('astro:after-swap', setupMobileMenu);
+</script>

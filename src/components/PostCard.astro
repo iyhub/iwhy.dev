@@ -28,7 +28,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 	</div>
 	{description && <p class="post-description">{description}</p>}
 	{tags && tags.length > 0 && (
-		<div class="post-tags">
+		<div class="post-tags text-sm">
 			{tags.map(tag => (
 				<a href={`/tags/${tag}`} class="tag">{tag}</a>
 			))}
@@ -39,7 +39,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 <style>
 	.post-card {
 		padding: 1.5em 0;
-		border-bottom: 1px solid rgba(var(--gray-light), 0.6);
+		border-bottom: 2px dotted rgba(var(--gray-light), 0.6);
 	}
 
 	.post-card:last-child {
@@ -97,7 +97,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5em;
-		margin-top: 0.75em;
+		margin-top: 0.5em;
 	}
 
 	.tag {

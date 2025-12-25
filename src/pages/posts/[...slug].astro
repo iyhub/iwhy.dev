@@ -7,10 +7,20 @@ export async function getStaticPaths() {
 		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 	return posts.map((post, index) => {
-		// 同分类推荐文章（排除当前文章，最多3篇）
+		const currentTags = post.data.tags || [];
+
+		// 按共同标签数量排序的相关文章（排除当前文章，最多3篇）
 		const relatedPosts = posts
-			.filter(p => p.id !== post.id && p.data.category === post.data.category)
-			.slice(0, 3);
+			.filter(p => p.id !== post.id)
+			.map(p => {
+				const pTags = p.data.tags || [];
+				const commonTags = currentTags.filter(tag => pTags.includes(tag));
+				return { post: p, commonCount: commonTags.length };
+			})
+			.filter(item => item.commonCount > 0)
+			.sort((a, b) => b.commonCount - a.commonCount)
+			.slice(0, 3)
+			.map(item => item.post);
 
 		return {
 			params: { slug: post.id },

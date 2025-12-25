@@ -46,7 +46,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 					<span class="separator">›</span>
 					<a href="/weekly">周刊</a>
 					<span class="separator">›</span>
-					<span class="current">#{issue}</span>
+					<span class="current">#{title}</span>
 				</nav>
 				<article>
 					<header class="pick-header">
@@ -62,13 +62,13 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 					{prevItem && (
 						<a href={`/weekly/${prevItem.id}`} class="nav-prev">
 							<span class="nav-label">上一期</span>
-							<span class="nav-title">#{prevItem.data.issue}</span>
+							<span class="nav-title">#{prevItem.data.title}</span>
 						</a>
 					)}
 					{nextItem && (
 						<a href={`/weekly/${nextItem.id}`} class="nav-next">
 							<span class="nav-label">下一期</span>
-							<span class="nav-title">#{nextItem.data.issue}</span>
+							<span class="nav-title">#{nextItem.data.title}</span>
 						</a>
 					)}
 				</nav>
