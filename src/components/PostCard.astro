@@ -19,7 +19,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 
 <article class="post-card">
 	<a href={`/posts/${slug}`} class="post-link">
-		<h2 class="post-title" transition:name={`post-title-${slug}`}>{title}</h2>
+		<h3 class="post-title" transition:name={`post-title-${slug}`}>{title}</h3>
 	</a>
 	<div class="post-meta">
 		<time datetime={date.toISOString()}>{formattedDate}</time>
