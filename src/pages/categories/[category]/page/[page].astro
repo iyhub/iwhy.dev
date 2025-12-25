@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PostCard from '../../../../components/PostCard.astro';
+import Pagination from '../../../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const PAGE_SIZE = 10;
+	const allPosts = await getCollection('posts', ({ data }) => data.draft !== true);
+	const categories = [...new Set(allPosts.map(post => post.data.category))];
+
+	const paths = [];
+
+	for (const category of categories) {
+		const categoryPosts = allPosts
+			.filter(post => post.data.category === category)
+			.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+		const totalPages = Math.ceil(categoryPosts.length / PAGE_SIZE);
+
+		for (let i = 0; i < totalPages; i++) {
+			const page = i + 1;
+			const start = i * PAGE_SIZE;
+			const end = start + PAGE_SIZE;
+
+			paths.push({
+				params: { category, page: String(page) },
+				props: {
+					posts: categoryPosts.slice(start, end),
+					currentPage: page,
+					totalPages,
+					totalPosts: categoryPosts.length,
+					category,
+				},
+			});
+		}
+	}
+
+	return paths;
+}
+
+const { posts, currentPage, totalPages, totalPosts, category } = Astro.props;
+---
+
+<BaseLayout title={`${category} - 第 ${currentPage} 页`} description={`${category}分类下的所有文章`}>
+	<header class="page-header">
+		<a href="/categories" class="back">&larr; 所有分类</a>
+		<h1>{category}</h1>
+		<p class="count">共 {totalPosts} 篇文章</p>
+	</header>
+
+	<div class="post-list">
+		{posts.map((post) => (
+			<PostCard
+				title={post.data.title}
+				description={post.data.description}
+				date={post.data.date}
+				category={post.data.category}
+				tags={post.data.tags}
+				slug={post.id}
+			/>
+		))}
+	</div>
+
+	<Pagination
+		currentPage={currentPage}
+		totalPages={totalPages}
+		baseUrl={`/categories/${category}/page`}
+	/>
+</BaseLayout>
+
+<style>
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.back {
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+		text-decoration: none;
+	}
+
+	.back:hover {
+		color: var(--accent);
+	}
+
+	h1 {
+		margin: 0.5em 0 0.25em;
+	}
+
+	.count {
+		color: rgb(var(--gray));
+		margin: 0;
+	}
+
+	.post-list {
+		display: flex;
+		flex-direction: column;
+	}
+</style>

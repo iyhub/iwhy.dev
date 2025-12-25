@@ -54,7 +54,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 						<h1 transition:name={`weekly-title-${item.id}`}>{title}</h1>
 						<time datetime={date.toISOString()}>{formattedDate}</time>
 					</header>
-					<div class="prose max-w-none">
+					<div class="prose prose-sm max-w-none">
 						<Content />
 					</div>
 				</article>

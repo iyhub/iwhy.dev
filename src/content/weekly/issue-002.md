@@ -1,7 +1,7 @@
 ---
 title: "周刊 #2"
 issue: 2
-date: 2024-12-17
+date: 2025-12-17
 description: "AI 工具、效率提升与年终思考"
 ---
 

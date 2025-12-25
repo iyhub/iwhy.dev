@@ -1,6 +1,6 @@
 // 站点全局配置
 export const SITE_TITLE = 'iWhy Blog';
-export const SITE_DESCRIPTION = '技术分享与生活随笔';
+export const SITE_DESCRIPTION = '阿歪的技术分享与生活随笔';
 export const SITE_AUTHOR = 'Cole';
 
 // 分类定义

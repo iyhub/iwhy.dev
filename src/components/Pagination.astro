@@ -1,0 +1,172 @@
+---
+interface Props {
+	currentPage: number;
+	totalPages: number;
+	baseUrl: string; // e.g., '/posts/page'
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+const prevUrl = currentPage > 1 ? `${baseUrl}/${currentPage - 1}` : null;
+const nextUrl = currentPage < totalPages ? `${baseUrl}/${currentPage + 1}` : null;
+
+// 生成页码数组，最多显示 5 个页码
+function getPageNumbers() {
+	const pages: (number | string)[] = [];
+	const showPages = 5;
+
+	if (totalPages <= showPages) {
+		for (let i = 1; i <= totalPages; i++) {
+			pages.push(i);
+		}
+	} else {
+		if (currentPage <= 3) {
+			for (let i = 1; i <= 4; i++) pages.push(i);
+			pages.push('...');
+			pages.push(totalPages);
+		} else if (currentPage >= totalPages - 2) {
+			pages.push(1);
+			pages.push('...');
+			for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
+		} else {
+			pages.push(1);
+			pages.push('...');
+			for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
+			pages.push('...');
+			pages.push(totalPages);
+		}
+	}
+
+	return pages;
+}
+
+const pageNumbers = getPageNumbers();
+---
+
+{totalPages > 1 && (
+	<nav class="pagination" aria-label="分页导航">
+		<a
+			href={prevUrl}
+			class:list={['page-link', 'prev', { disabled: !prevUrl }]}
+			aria-disabled={!prevUrl}
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<polyline points="15 18 9 12 15 6"></polyline>
+			</svg>
+			<span>上一页</span>
+		</a>
+
+		<div class="page-numbers">
+			{pageNumbers.map((page) =>
+				page === '...' ? (
+					<span class="ellipsis">...</span>
+				) : (
+					<a
+						href={`${baseUrl}/${page}`}
+						class:list={['page-number', { active: page === currentPage }]}
+						aria-current={page === currentPage ? 'page' : undefined}
+					>
+						{page}
+					</a>
+				)
+			)}
+		</div>
+
+		<a
+			href={nextUrl}
+			class:list={['page-link', 'next', { disabled: !nextUrl }]}
+			aria-disabled={!nextUrl}
+		>
+			<span>下一页</span>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<polyline points="9 18 15 12 9 6"></polyline>
+			</svg>
+		</a>
+	</nav>
+)}
+
+<style>
+	.pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5em;
+		margin-top: 3em;
+		padding-top: 2em;
+		border-top: 1px solid var(--header-border);
+	}
+
+	.page-link {
+		display: flex;
+		align-items: center;
+		gap: 0.25em;
+		padding: 0.5em 1em;
+		color: rgb(var(--gray-dark));
+		text-decoration: none;
+		border-radius: 6px;
+		transition: all 0.2s ease;
+	}
+
+	.page-link:hover:not(.disabled) {
+		background: rgb(var(--gray-light));
+		color: var(--accent);
+	}
+
+	.page-link.disabled {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+	.page-numbers {
+		display: flex;
+		align-items: center;
+		gap: 0.25em;
+	}
+
+	.page-number {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 2.25em;
+		height: 2.25em;
+		padding: 0 0.5em;
+		color: rgb(var(--gray-dark));
+		text-decoration: none;
+		border-radius: 6px;
+		transition: all 0.2s ease;
+	}
+
+	.page-number:hover {
+		background: rgb(var(--gray-light));
+	}
+
+	.page-number.active {
+		background: var(--accent);
+		color: white;
+	}
+
+	.ellipsis {
+		padding: 0 0.5em;
+		color: rgb(var(--gray));
+	}
+
+	@media (max-width: 640px) {
+		.pagination {
+			gap: 0.25em;
+		}
+
+		.page-link span {
+			display: none;
+		}
+
+		.page-link {
+			padding: 0.5em;
+		}
+
+		.page-number {
+			min-width: 2em;
+			height: 2em;
+			font-size: 0.9em;
+		}
+	}
+</style>

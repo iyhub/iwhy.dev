@@ -6,7 +6,7 @@ export async function getStaticPaths() {
 	const posts = (await getCollection('posts', ({ data }) => data.draft !== true))
 		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-	return posts.map((post, index) => {
+	return posts.map((post) => {
 		const currentTags = post.data.tags || [];
 
 		// 按共同标签数量排序的相关文章（排除当前文章，最多3篇）
@@ -22,12 +22,26 @@ export async function getStaticPaths() {
 			.slice(0, 3)
 			.map(item => item.post);
 
+		// 上一篇/下一篇：同系列内按日期排序
+		let prevPost = null;
+		let nextPost = null;
+
+		if (post.data.series) {
+			const seriesPosts = posts
+				.filter(p => p.data.series === post.data.series)
+				.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf()); // 按日期升序
+
+			const currentIndex = seriesPosts.findIndex(p => p.id === post.id);
+			prevPost = seriesPosts[currentIndex - 1] || null;
+			nextPost = seriesPosts[currentIndex + 1] || null;
+		}
+
 		return {
 			params: { slug: post.id },
 			props: {
 				post,
-				prevPost: posts[index + 1] || null,
-				nextPost: posts[index - 1] || null,
+				prevPost,
+				nextPost,
 				relatedPosts,
 			},
 		};

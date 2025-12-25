@@ -3,7 +3,7 @@
 > 本文档定义 **How**，明确技术实现方案，基于 intent.md 和 spec.md 制定。
 
 ## 版本
-v0.0.1
+v0.3.0
 
 ---
 
@@ -193,6 +193,39 @@ const astroPosts = posts.filter(post =>
 );
 ```
 
+### 分页实现方案
+
+**路由结构：**
+```
+/posts/           → 第 1 页（重定向或直接渲染）
+/posts/page/2     → 第 2 页
+/posts/page/3     → 第 3 页
+```
+
+**Astro 动态路由实现：**
+```typescript
+// src/pages/posts/page/[page].astro
+export async function getStaticPaths({ paginate }) {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const sortedPosts = posts.sort((a, b) =>
+    b.data.date.valueOf() - a.data.date.valueOf()
+  );
+
+  return paginate(sortedPosts, { pageSize: 10 });
+}
+```
+
+**分页组件：**
+- 显示当前页码 / 总页数
+- 上一页 / 下一页按钮
+- 首页 / 末页快捷跳转（可选）
+
+**分页配置：**
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| pageSize | 10 | 每页文章数 |
+| 首页处理 | 重定向 | /posts → /posts/page/1 |
+
 ---
 
 ## 5. 部署方案
@@ -249,11 +282,17 @@ jobs:
 - [x] 导航菜单更新
 - [x] SEO 优化（JSON-LD 结构化数据）
 - [x] 响应式适配优化（720px, 480px 断点）
+- [x] 暗黑模式
+- [x] 移动端导航菜单
+- [x] 相关文章推荐（基于标签）
+- [x] 系列文章上一篇/下一篇
 
-### Phase 3：优化上线
+### Phase 3：分页与优化
+- [x] 首页文章列表分页
+- [x] 分类页分页
+- [x] 标签页分页
 - [ ] 性能优化
 - [ ] 部署配置
-- [ ] 正式上线
 
 ---
 
@@ -261,6 +300,6 @@ jobs:
 
 | 日期 | 版本 | 变更内容 |
 |------|------|----------|
+| 2024-12-25 | v0.3.0 | 新增分页方案，更新 Phase 2/3 |
 | 2024-12-24 | v0.2.0 | Phase 2 完成：分类标签、SEO、响应式 |
 | 2024-12-24 | v0.1.0 | Phase 1 完成：基础搭建 |
-| YYYY-MM-DD | v0.0.1 | 初始版本 |

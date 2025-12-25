@@ -76,22 +76,15 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 						<slot />
 					</div>
 				</article>
+				{/* 移动端：推荐阅读（桌面端隐藏，显示在侧边栏） */}
 				{relatedPosts.length > 0 && (
-					<section class="related-posts">
-						<h3 class="related-title">相关文章</h3>
-						<div class="related-list">
+					<section class="related-mobile">
+						<div class="related-title">推荐阅读</div>
+						<ul class="related-list">
 							{relatedPosts.map((p) => (
-								<a href={`/posts/${p.id}`} class="related-card">
-									<span class="related-card-title">{p.data.title}</span>
-									<span class="related-card-date">
-										{p.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}
-									</span>
-									{p.data.description && (
-										<span class="related-card-desc">{p.data.description}</span>
-									)}
-								</a>
+								<li><a href={`/posts/${p.id}`}>{p.data.title}</a></li>
 							))}
-						</div>
+						</ul>
 					</section>
 				)}
 				<nav class="post-nav">
@@ -109,10 +102,20 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 					)}
 				</nav>
 			</main>
-			{hasTOC && (
+			{(hasTOC || relatedPosts.length > 0) && (
 				<aside class="toc-sidebar">
 					<div class="toc-wrapper">
-						<TOC headings={headings} />
+						{hasTOC && <TOC headings={headings} />}
+						{relatedPosts.length > 0 && (
+							<nav class="related-sidebar">
+								<div class="related-title">推荐阅读</div>
+								<ul class="related-list">
+									{relatedPosts.map((p) => (
+										<li><a href={`/posts/${p.id}`}>{p.data.title}</a></li>
+									))}
+								</ul>
+							</nav>
+						)}
 					</div>
 				</aside>
 			)}
@@ -126,7 +129,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 	/* 布局容器 - 文章始终居中 */
 	.post-container {
 		position: relative;
-		max-width: 720px;
+		max-width: 800px;
 		margin: 0 auto;
 		padding: 1.5em 1em 3em;
 	}
@@ -277,66 +280,72 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 		margin: 1em 0;
 	}
 
-	/* 相关文章 */
-	.related-posts {
-		margin-top: 3em;
+	/* 侧边栏 & 移动端推荐阅读 - 和 TOC 完全一致的样式 */
+	.related-sidebar,
+	.related-mobile {
+		font-size: 0.875em;
+		line-height: 1.6;
+	}
+
+	.related-sidebar {
+		margin-top: 2em;
 		padding-top: 1.5em;
 		border-top: 1px solid rgb(var(--gray-light));
 	}
 
+	.related-mobile {
+		margin-top: 3em;
+		padding-top: 1.5em;
+		border-top: 1px solid rgb(var(--gray-light));
+		display: none;
+	}
+
 	.related-title {
-		font-size: 0.875em;
 		font-weight: 600;
+		color: rgb(var(--black));
+		margin-bottom: 0.75em;
+		font-size: 0.8em;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		color: rgb(var(--gray));
-		margin: 0 0 1em 0;
 	}
 
 	.related-list {
-		display: grid;
-		gap: 1em;
+		list-style: none;
+		padding: 0;
+		margin: 0;
 	}
 
-	.related-card {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25em;
-		padding: 1em;
-		background: rgba(var(--gray-light), 0.5);
-		border-radius: 8px;
+	.related-list li {
+		margin: 0.25em 0;
+	}
+
+	.related-list a {
+		display: block;
+		padding: 0.25em 0 0.25em 0.75em;
+		color: rgb(var(--gray));
 		text-decoration: none;
+		transition: color 0.2s;
+		position: relative;
+	}
+
+	.related-list a::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 2px;
+		height: 1em;
+		background: transparent;
 		transition: background 0.2s;
 	}
 
-	.related-card:hover {
-		background: rgba(var(--gray-light), 0.8);
-	}
-
-	.related-card-title {
-		font-weight: 500;
-		color: rgb(var(--black));
-		line-height: 1.4;
-	}
-
-	.related-card:hover .related-card-title {
+	.related-list a:hover {
 		color: var(--accent);
 	}
 
-	.related-card-date {
-		font-size: 0.8em;
-		color: rgb(var(--gray));
-	}
-
-	.related-card-desc {
-		font-size: 0.875em;
-		color: rgb(var(--black));
-		opacity: 0.85;
-		line-height: 1.5;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
+	.related-list a:hover::before {
+		background: var(--accent);
 	}
 
 	.post-nav {
@@ -383,10 +392,14 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 		color: var(--accent);
 	}
 
-	/* 响应式：屏幕不够宽时隐藏 TOC */
+	/* 响应式：屏幕不够宽时隐藏侧边栏，显示移动端推荐 */
 	@media (max-width: 1200px) {
 		.toc-sidebar {
 			display: none;
+		}
+
+		.related-mobile {
+			display: block;
 		}
 	}
 
