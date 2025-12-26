@@ -1,6 +1,6 @@
 ---
 title: "AI Coding 最佳实践（一）：三层文档驱动开发"
-date: 2024-12-25
+date: 2025-12-25
 series: "AI Coding 最佳实践"
 category: tech
 tags: ["AI", "Claude", "开发效率", "方法论"]

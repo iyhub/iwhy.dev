@@ -1,6 +1,6 @@
 ---
 title: "AI Coding 最佳实践（三）：Spec 规范层"
-date: 2024-12-27
+date: 2025-12-27
 series: "AI Coding 最佳实践"
 category: tech
 tags: ["AI", "Claude", "开发效率", "方法论"]
