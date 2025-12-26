@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import TOC from '../components/TOC.astro';
 import CodeCopy from '../components/CodeCopy.astro';
 import type { CollectionEntry } from 'astro:content';
+import { getEntry } from 'astro:content';
 
 interface Heading {
 	depth: number;
@@ -22,6 +23,9 @@ interface Props {
 
 const { post, headings = [], prevPost, nextPost, relatedPosts = [] } = Astro.props;
 const { title, date, category, tags, description, cover } = post.data;
+const categoryEntry = await getEntry(category);
+const categorySlug = categoryEntry.id;
+const categoryName = categoryEntry.data.name;
 const hasTOC = headings.filter(h => h.depth === 2 || h.depth === 3).length > 0;
 
 const formattedDate = date.toLocaleDateString('zh-CN', {
@@ -52,7 +56,7 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 				<nav class="breadcrumb">
 					<a href="/">首页</a>
 					<span class="sep">›</span>
-					<a href="/posts">文章</a>
+					<a href="/posts/page/1">文章</a>
 					<span class="sep">›</span>
 					<span class="current">{title}</span>
 				</nav>
@@ -62,12 +66,12 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 						<div class="post-meta">
 							<time datetime={date.toISOString()}>{formattedDate}</time>
 							<span class="separator">·</span>
-							<a href={`/categories/${category}`} class="category">{category}</a>
+							<a href={`/categories/${categorySlug}/page/1`} class="category">{categoryName}</a>
 						</div>
 						{tags && tags.length > 0 && (
 							<div class="post-tags">
 								{tags.map(tag => (
-									<a href={`/tags/${tag}`} class="tag">{tag}</a>
+									<a href={`/tags/${tag}/page/1`} class="tag">{tag}</a>
 								))}
 							</div>
 						)}

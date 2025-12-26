@@ -2,7 +2,7 @@
 title: "AI Coding 最佳实践（一）：三层文档驱动开发"
 date: 2024-12-25
 series: "AI Coding 最佳实践"
-category: "技术"
+category: tech
 tags: ["AI", "Claude", "开发效率", "方法论"]
 description: "介绍如何通过 Intent、Spec、Plan 三层文档来指导 AI 进行高质量的代码开发。"
 ---

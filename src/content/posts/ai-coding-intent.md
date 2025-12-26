@@ -2,7 +2,7 @@
 title: "AI Coding 最佳实践（二）：Intent 意图层"
 date: 2024-12-26
 series: "AI Coding 最佳实践"
-category: "技术"
+category: tech
 tags: ["AI", "Claude", "开发效率", "方法论"]
 description: "深入讲解 Intent 意图层的写法，明确项目的 Why 和 For Whom。"
 ---

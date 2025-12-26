@@ -1,12 +1,13 @@
 ---
 title: "你好，世界"
 date: 2024-12-24
-category: "技术"
+category: essay
 tags: ["Astro", "博客"]
 description: "这是我的第一篇博客文章，使用 Astro 搭建的个人博客正式上线了。"
 ---
 
 ## 欢迎来到我的博客
+![image-20251226165152253](https://imgs.iwhy.dev/2025/12/26/1766739112321.png)
 
 这是使用 Astro 搭建的个人博客。我将在这里分享技术文章和生活随笔。
 

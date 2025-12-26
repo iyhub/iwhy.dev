@@ -1,7 +1,7 @@
 ---
 title: "2024 年度阅读书单"
 date: 2024-12-12
-category: "生活"
+category: life
 tags: ["阅读", "书单", "年度总结"]
 description: "回顾 2024 年读过的好书，分享阅读心得和推荐理由。"
 ---

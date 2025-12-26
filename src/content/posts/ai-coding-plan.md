@@ -2,7 +2,7 @@
 title: "AI Coding 最佳实践（四）：Plan 方案层"
 date: 2024-12-28
 series: "AI Coding 最佳实践"
-category: "技术"
+category: tech
 tags: ["AI", "Claude", "开发效率", "方法论"]
 description: "深入讲解 Plan 方案层的写法，制定技术实现方案和开发计划。"
 ---

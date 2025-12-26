@@ -2,26 +2,35 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
+const allCategories = await getCollection('categories');
 const posts = await getCollection('posts', ({ data }) => data.draft !== true);
 
 // 统计每个分类的文章数
 const categoryCount = posts.reduce((acc, post) => {
-	const category = post.data.category;
-	acc[category] = (acc[category] || 0) + 1;
+	const categoryId = post.data.category.id;
+	acc[categoryId] = (acc[categoryId] || 0) + 1;
 	return acc;
 }, {} as Record<string, number>);
 
-const categories = Object.entries(categoryCount).sort((a, b) => b[1] - a[1]);
+// 合并分类信息和文章数量，按数量排序
+const categories = allCategories
+	.map(cat => ({
+		slug: cat.id,
+		name: cat.data.name,
+		count: categoryCount[cat.id] || 0,
+	}))
+	.filter(cat => cat.count > 0)
+	.sort((a, b) => b.count - a.count);
 ---
 
 <BaseLayout title="分类" description="按分类浏览文章">
 	<h1>分类</h1>
 	<ul class="category-list">
-		{categories.map(([category, count]) => (
+		{categories.map((category) => (
 			<li>
-				<a href={`/categories/${category}`}>
-					<span class="name">{category}</span>
-					<span class="count">{count}</span>
+				<a href={`/categories/${category.slug}/page/1`}>
+					<span class="name">{category.name}</span>
+					<span class="count">{category.count}</span>
 				</a>
 			</li>
 		))}

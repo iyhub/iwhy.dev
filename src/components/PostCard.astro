@@ -3,12 +3,13 @@ interface Props {
 	title: string;
 	description?: string;
 	date: Date;
-	category: string;
+	categorySlug: string;
+	categoryName: string;
 	tags?: string[];
 	slug: string;
 }
 
-const { title, description, date, category, tags, slug } = Astro.props;
+const { title, description, date, categorySlug, categoryName, tags, slug } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('zh-CN', {
 	year: 'numeric',
@@ -24,13 +25,13 @@ const formattedDate = date.toLocaleDateString('zh-CN', {
 	<div class="post-meta">
 		<time datetime={date.toISOString()}>{formattedDate}</time>
 		<span class="separator">·</span>
-		<a href={`/categories/${category}`} class="category">{category}</a>
+		<a href={`/categories/${categorySlug}/page/1`} class="category">{categoryName}</a>
 	</div>
 	{description && <p class="post-description">{description}</p>}
 	{tags && tags.length > 0 && (
 		<div class="post-tags text-sm">
 			{tags.map(tag => (
-				<a href={`/tags/${tag}`} class="tag">{tag}</a>
+				<a href={`/tags/${tag}/page/1`} class="tag">{tag}</a>
 			))}
 		</div>
 	)}

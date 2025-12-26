@@ -1,7 +1,7 @@
 ---
 title: "终端效率提升指南"
 date: 2024-12-08
-category: "技术"
+category: tech
 tags: ["终端", "效率", "工具"]
 description: "分享一些提升终端使用效率的技巧和工具配置。"
 ---

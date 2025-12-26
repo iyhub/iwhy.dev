@@ -2,7 +2,7 @@
 title: "AI Coding 最佳实践（三）：Spec 规范层"
 date: 2024-12-27
 series: "AI Coding 最佳实践"
-category: "技术"
+category: tech
 tags: ["AI", "Claude", "开发效率", "方法论"]
 description: "深入讲解 Spec 规范层的写法，明确功能边界和验收标准。"
 ---

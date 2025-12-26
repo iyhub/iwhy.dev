@@ -1,7 +1,7 @@
 ---
 title: "Tailwind CSS v4 新特性解析"
 date: 2024-12-20
-category: "技术"
+category: tech
 tags: ["Tailwind", "CSS", "前端"]
 description: "深入了解 Tailwind CSS v4 的重大更新，包括新的引擎、更快的构建速度和改进的开发体验。"
 ---

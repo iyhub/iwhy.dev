@@ -1,5 +1,14 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
+
+// 分类集合
+const categories = defineCollection({
+	loader: glob({ base: './src/content/categories', pattern: '*.json' }),
+	schema: z.object({
+		name: z.string(),           // 中文显示名
+		description: z.string().optional(),
+	}),
+});
 
 const posts = defineCollection({
 	loader: glob({ base: './src/content/posts', pattern: '**/*.{md,mdx}' }),
@@ -8,7 +17,7 @@ const posts = defineCollection({
 			title: z.string(),
 			date: z.coerce.date(),
 			series: z.string().optional(),
-			category: z.string(),
+			category: reference('categories'),  // 引用分类 slug
 			tags: z.array(z.string()).optional(),
 			description: z.string().optional(),
 			draft: z.boolean().default(false),
@@ -28,4 +37,4 @@ const weekly = defineCollection({
 	}),
 });
 
-export const collections = { posts, weekly };
+export const collections = { categories, posts, weekly };

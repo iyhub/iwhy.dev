@@ -1,7 +1,7 @@
 ---
 title: "使用 Astro 搭建个人博客"
 date: 2024-12-23
-category: "技术"
+category: tech
 tags: ["Astro", "Tailwind", "博客搭建"]
 description: "详细介绍如何使用 Astro 5.x 和 Tailwind CSS 4.x 搭建一个现代化的个人博客。"
 ---

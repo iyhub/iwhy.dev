@@ -2,7 +2,7 @@
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import PostCard from '../../../../components/PostCard.astro';
 import Pagination from '../../../../components/Pagination.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
 export async function getStaticPaths() {
 	const PAGE_SIZE = 10;
@@ -55,16 +55,20 @@ const { posts, currentPage, totalPages, totalPosts, tag } = Astro.props;
 	</header>
 
 	<div class="post-list">
-		{posts.map((post) => (
-			<PostCard
-				title={post.data.title}
-				description={post.data.description}
-				date={post.data.date}
-				category={post.data.category}
-				tags={post.data.tags}
-				slug={post.id}
-			/>
-		))}
+		{posts.map(async (post) => {
+			const category = await getEntry(post.data.category);
+			return (
+				<PostCard
+					title={post.data.title}
+					description={post.data.description}
+					date={post.data.date}
+					categorySlug={category.id}
+					categoryName={category.data.name}
+					tags={post.data.tags}
+					slug={post.id}
+				/>
+			);
+		})}
 	</div>
 
 	<Pagination

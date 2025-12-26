@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import ProductCard from '../components/ProductCard.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import { SITE_DESCRIPTION, PRODUCTS } from '../consts';
 
 // 获取所有已发布的文章，按日期倒序，首页只显示最新5篇
@@ -13,32 +13,30 @@ const hasMore = allPosts.length > 5;
 ---
 
 <BaseLayout>
-	<section class="hero">
-		<p class="intro">{SITE_DESCRIPTION}</p>
-	</section>
-
-	
-
 	<section class="posts">
 		<h2 class="section-title">Recent Posts</h2>
 		{posts.length > 0 ? (
 			<div class="post-list">
-				{posts.map((post) => (
-					<PostCard
-						title={post.data.title}
-						description={post.data.description}
-						date={post.data.date}
-						category={post.data.category}
-						tags={post.data.tags}
-						slug={post.id}
-					/>
-				))}
+				{posts.map(async (post) => {
+					const category = await getEntry(post.data.category);
+					return (
+						<PostCard
+							title={post.data.title}
+							description={post.data.description}
+							date={post.data.date}
+							categorySlug={category.id}
+							categoryName={category.data.name}
+							tags={post.data.tags}
+							slug={post.id}
+						/>
+					);
+				})}
 			</div>
 		) : (
 			<p class="no-posts">暂无文章</p>
 		)}
 		{hasMore && (
-			<a href="/posts" class="view-more">查看全部文章 &rarr;</a>
+			<a href="/posts/page/1" class="view-more">查看全部文章 &rarr;</a>
 		)}
 	</section>
 

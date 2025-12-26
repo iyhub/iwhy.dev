@@ -2,19 +2,21 @@
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import PostCard from '../../../../components/PostCard.astro';
 import Pagination from '../../../../components/Pagination.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
 export async function getStaticPaths() {
 	const PAGE_SIZE = 10;
+	const allCategories = await getCollection('categories');
 	const allPosts = await getCollection('posts', ({ data }) => data.draft !== true);
-	const categories = [...new Set(allPosts.map(post => post.data.category))];
 
 	const paths = [];
 
-	for (const category of categories) {
+	for (const category of allCategories) {
 		const categoryPosts = allPosts
-			.filter(post => post.data.category === category)
+			.filter(post => post.data.category.id === category.id)
 			.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+		if (categoryPosts.length === 0) continue;
 
 		const totalPages = Math.ceil(categoryPosts.length / PAGE_SIZE);
 
@@ -24,13 +26,14 @@ export async function getStaticPaths() {
 			const end = start + PAGE_SIZE;
 
 			paths.push({
-				params: { category, page: String(page) },
+				params: { category: category.id, page: String(page) },
 				props: {
 					posts: categoryPosts.slice(start, end),
 					currentPage: page,
 					totalPages,
 					totalPosts: categoryPosts.length,
-					category,
+					categoryName: category.data.name,
+					categorySlug: category.id,
 				},
 			});
 		}
@@ -39,33 +42,37 @@ export async function getStaticPaths() {
 	return paths;
 }
 
-const { posts, currentPage, totalPages, totalPosts, category } = Astro.props;
+const { posts, currentPage, totalPages, totalPosts, categoryName, categorySlug } = Astro.props;
 ---
 
-<BaseLayout title={`${category} - 第 ${currentPage} 页`} description={`${category}分类下的所有文章`}>
+<BaseLayout title={`${categoryName} - 第 ${currentPage} 页`} description={`${categoryName}分类下的所有文章`}>
 	<header class="page-header">
 		<a href="/categories" class="back">&larr; 所有分类</a>
-		<h1>{category}</h1>
+		<h1>{categoryName}</h1>
 		<p class="count">共 {totalPosts} 篇文章</p>
 	</header>
 
 	<div class="post-list">
-		{posts.map((post) => (
-			<PostCard
-				title={post.data.title}
-				description={post.data.description}
-				date={post.data.date}
-				category={post.data.category}
-				tags={post.data.tags}
-				slug={post.id}
-			/>
-		))}
+		{posts.map(async (post) => {
+			const category = await getEntry(post.data.category);
+			return (
+				<PostCard
+					title={post.data.title}
+					description={post.data.description}
+					date={post.data.date}
+					categorySlug={category.id}
+					categoryName={category.data.name}
+					tags={post.data.tags}
+					slug={post.id}
+				/>
+			);
+		})}
 	</div>
 
 	<Pagination
 		currentPage={currentPage}
 		totalPages={totalPages}
-		baseUrl={`/categories/${category}/page`}
+		baseUrl={`/categories/${categorySlug}/page`}
 	/>
 </BaseLayout>
 

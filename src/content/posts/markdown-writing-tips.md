@@ -1,7 +1,7 @@
 ---
 title: "Markdown 写作技巧与最佳实践"
 date: 2024-12-18
-category: "技术"
+category: tech
 tags: ["Markdown", "写作", "博客"]
 description: "分享一些 Markdown 写作的技巧，帮助你写出更清晰、更易读的技术文档。"
 ---

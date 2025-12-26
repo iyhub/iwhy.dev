@@ -21,7 +21,7 @@ const tags = Object.entries(tagCount).sort((a, b) => b[1] - a[1]);
 	{tags.length > 0 ? (
 		<div class="tag-cloud">
 			{tags.map(([tag, count]) => (
-				<a href={`/tags/${tag}`} class="tag">
+				<a href={`/tags/${tag}/page/1`} class="tag">
 					{tag}
 					<span class="count">{count}</span>
 				</a>
