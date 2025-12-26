@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import CodeCopy from '../components/CodeCopy.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import type { ImageMetadata } from 'astro';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
 	title?: string;
@@ -23,15 +24,7 @@ const {
 <html lang="zh-CN" theme-transition>
 	<head>
 		<BaseHead title={title} description={description} image={image} />
-		<script is:inline defer data-domain="iwhy-blog-2026.pages.dev" src="http://tongji.iwhy.dev/js/script.js"></script>
-
-		<script type="text/javascript" is:inline>
-			(function(c,l,a,r,i,t,y){
-				c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-				t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-				y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-			})(window, document, "clarity", "script", "ur3pve9hze");
-		</script>
+		<Analytics />
 	</head>
 	<body>
 		<Header />
