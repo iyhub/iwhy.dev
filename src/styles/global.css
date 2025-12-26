@@ -259,6 +259,30 @@ table {
 	h2 { font-size: 1.35em; }
 }
 
+/* 自定义滚动条 */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(var(--gray), 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: rgba(var(--gray), 0.3);
+	border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: rgba(var(--gray), 0.5);
+}
+
 /* Screen reader only */
 .sr-only {
 	border: 0;

@@ -7,6 +7,8 @@ tags: ["AI", "Claude", "开发效率", "方法论"]
 description: "深入讲解 Intent 意图层的写法，明确项目的 Why 和 For Whom。"
 ---
 
+> 本系列是受 [Sagasu](https://www.sagasu.art) 启发,基于其方法论实践本博客系统,然后再通过AI反推写出来的,也就是说这个系列大部分是通过AI总结的。
+
 ## Intent 层的核心作用
 
 Intent（意图层）回答两个根本问题：

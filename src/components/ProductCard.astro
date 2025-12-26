@@ -1,4 +1,19 @@
 ---
+import {
+	PhBookOpen,
+	PhSparkle,
+	PhCamera,
+	PhImage,
+	PhMagnifyingGlass,
+	PhMagicWand,
+	PhArrowsLeftRight,
+	PhEnvelope,
+	PhGridFour,
+	PhWrench,
+	PhPaperPlaneTilt,
+	PhStar,
+} from 'phosphor-icons-astro';
+
 interface Props {
 	name: string;
 	description: string;
@@ -7,10 +22,31 @@ interface Props {
 }
 
 const { name, description, url, icon } = Astro.props;
+
+const iconMap: Record<string, any> = {
+	PhBookOpen,
+	PhSparkle,
+	PhCamera,
+	PhImage,
+	PhMagnifyingGlass,
+	PhMagicWand,
+	PhArrowsLeftRight,
+	PhEnvelope,
+	PhGridFour,
+	PhWrench,
+	PhPaperPlaneTilt,
+	PhStar,
+};
+
+const IconComponent = icon ? iconMap[icon] : null;
 ---
 
 <a href={url} class="product-card" target="_blank" rel="noopener">
-	{icon && <span class="icon">{icon}</span>}
+	{IconComponent && (
+		<span class="icon">
+			<IconComponent size={28} weight="duotone" />
+		</span>
+	)}
 	<div class="content">
 		<h3 class="name">{name}</h3>
 		<p class="description">{description}</p>
@@ -36,8 +72,11 @@ const { name, description, url, icon } = Astro.props;
 	}
 
 	.icon {
-		font-size: 2em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		flex-shrink: 0;
+		color: var(--accent);
 	}
 
 	.content {
@@ -74,10 +113,6 @@ const { name, description, url, icon } = Astro.props;
 	@media (max-width: 480px) {
 		.product-card {
 			padding: 1em;
-		}
-
-		.icon {
-			font-size: 1.5em;
 		}
 	}
 </style>

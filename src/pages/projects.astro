@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { PRODUCTS } from '../consts';
+---
+
+<BaseLayout title='项目'>
+	<section class="projects">
+		<header class="page-header">
+			<h1>项目</h1>
+			<p class="page-desc">我的一些开源项目和在线工具</p>
+		</header>
+		<div class="product-grid">
+			{PRODUCTS.map((product) => (
+				<ProductCard
+					name={product.name}
+					description={product.description}
+					url={product.url}
+					icon={product.icon}
+				/>
+			))}
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.projects {
+		padding: 1em 0 2em;
+	}
+
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.page-header h1 {
+		font-size: 1.75em;
+		margin: 0 0 0.25em 0;
+	}
+
+	.page-desc {
+		color: rgb(var(--gray));
+		margin: 0;
+	}
+
+	.product-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1em;
+	}
+
+	@media (max-width: 480px) {
+		.product-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

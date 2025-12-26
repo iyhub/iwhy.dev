@@ -24,7 +24,10 @@ const categories = allCategories
 ---
 
 <BaseLayout title="分类" description="按分类浏览文章">
-	<h1>分类</h1>
+	<header class="page-header">
+		<h1>分类</h1>
+		<p class="page-desc">按分类浏览文章</p>
+	</header>
 	<ul class="category-list">
 		{categories.map((category) => (
 			<li>
@@ -38,8 +41,18 @@ const categories = allCategories
 </BaseLayout>
 
 <style>
-	h1 {
-		margin-bottom: 1.5em;
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.page-header h1 {
+		font-size: 1.75em;
+		margin: 0 0 0.25em 0;
+	}
+
+	.page-desc {
+		color: rgb(var(--gray));
+		margin: 0;
 	}
 
 	.category-list {

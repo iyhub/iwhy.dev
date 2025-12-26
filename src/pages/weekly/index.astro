@@ -11,6 +11,11 @@ const weekly = (await getCollection('weekly', ({ data }) => data.draft !== true)
 		<header class="page-header">
 			<h1>周刊</h1>
 			<p class="page-desc">每周发现的有趣产品、工具和文章</p>
+			<p class="contact-info">
+				投稿：<a href="mailto:submit@iwhy.dev">submit@iwhy.dev</a>
+				<span class="divider">·</span>
+				<a href="https://x.com/sh_awai">@sh_awai</a>
+			</p>
 		</header>
 
 		{weekly.length > 0 ? (
@@ -53,6 +58,26 @@ const weekly = (await getCollection('weekly', ({ data }) => data.draft !== true)
 	.page-desc {
 		color: rgb(var(--gray));
 		margin: 0;
+	}
+
+	.contact-info {
+		margin-top: 0.75em;
+		font-size: 0.875em;
+		color: rgb(var(--gray));
+	}
+
+	.contact-info a {
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.contact-info a:hover {
+		text-decoration: underline;
+	}
+
+	.contact-info .divider {
+		margin: 0 0.5em;
+		opacity: 0.5;
 	}
 
 	.picks-list {

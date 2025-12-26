@@ -17,7 +17,10 @@ const tags = Object.entries(tagCount).sort((a, b) => b[1] - a[1]);
 ---
 
 <BaseLayout title="标签" description="按标签浏览文章">
-	<h1>标签</h1>
+	<header class="page-header">
+		<h1>标签</h1>
+		<p class="page-desc">按标签浏览文章</p>
+	</header>
 	{tags.length > 0 ? (
 		<div class="tag-cloud">
 			{tags.map(([tag, count]) => (
@@ -33,8 +36,18 @@ const tags = Object.entries(tagCount).sort((a, b) => b[1] - a[1]);
 </BaseLayout>
 
 <style>
-	h1 {
-		margin-bottom: 1.5em;
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.page-header h1 {
+		font-size: 1.75em;
+		margin: 0 0 0.25em 0;
+	}
+
+	.page-desc {
+		color: rgb(var(--gray));
+		margin: 0;
 	}
 
 	.tag-cloud {

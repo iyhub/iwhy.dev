@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+	PhXLogo
+} from 'phosphor-icons-astro';
 ---
 
 <BaseLayout title="关于我" description="关于博客作者">
@@ -9,13 +12,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 			你好！欢迎来到我的博客。
 		</p>
 		<p>
-			这里是我分享技术心得和生活感悟的地方。我对前端开发、工具效率等话题特别感兴趣。
+			这里是我分享技术心得和生活感悟的地方。我对Vibe Coding、独立开发、工具效率等话题特别感兴趣。
 		</p>
 		<h2>关于这个博客</h2>
 		<p>
 			这个博客使用 <a href="https://astro.build" target="_blank" rel="noopener">Astro</a> 构建，
 			采用霞鹜文楷作为中文字体，追求简洁优雅的阅读体验。
 		</p>
+
+		<div class="flex flex-col">
+			<h2>其他社交媒体:</h2> 
+			<a href="https://x.com/sh_awai">
+				<PhXLogo class={'size-8'} />
+			</a> 
+			</div>
 	</article>
 </BaseLayout>
 

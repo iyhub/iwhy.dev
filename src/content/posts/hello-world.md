@@ -1,6 +1,6 @@
 ---
 title: "你好，世界"
-date: 2024-12-24
+date: 2021-01-24
 category: essay
 tags: ["Astro", "博客"]
 description: "这是我的第一篇博客文章，使用 Astro 搭建的个人博客正式上线了。"
