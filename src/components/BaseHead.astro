@@ -4,7 +4,7 @@
 import '../styles/global.css';
 import { ViewTransitions } from 'astro:transitions';
 import type { ImageMetadata } from 'astro';
-import FallbackImage from '../assets/blog-placeholder-1.jpg';
+import FallbackImage from '../assets/og-image.png';
 import { SITE_TITLE, SITE_AUTHOR } from '../consts';
 
 interface Props {
@@ -94,6 +94,7 @@ const articleSchema = article ? {
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:site" content={'@iwhy.dev'} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
