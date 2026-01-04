@@ -82,9 +82,9 @@ description: "介绍如何通过 Intent、Spec、Plan 三层文档来指导 AI �
 本系列将详细介绍每一层文档的写法：
 
 1. **本文**：三层文档驱动开发概述
-2. [Intent 意图层：如何明确项目目标](ai-coding-intent)
-3. [Spec 规范层：如何定义功能边界](ai-coding-spec)
-4. [Plan 方案层：如何制定技术方案](ai-coding-plan)
+2. [Intent 意图层：如何明确项目目标](/posts/vibe-coding/ai-coding-intent)
+3. [Spec 规范层：如何定义功能边界](/posts/vibe-coding/ai-coding-spec)
+4. [Plan 方案层：如何制定技术方案](/posts/vibe-coding/ai-coding-plan)
 
 ---
 
