@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Giscus from '@giscus/react';
+import { COMMENT_CONFIG } from '../consts';
 
 const id = 'inject-comments';
 
@@ -40,16 +41,7 @@ const Comments = () => {
             {mounted ? (
                 <Giscus
                     id={id}
-                    repo="iyhub/iwhy.dev"
-                    repoId="R_kgDOQuXySw"
-                    category="Announcements"
-                    categoryId="DIC_kwDOQuXyS84C0jgj"
-                    mapping="title"
-                    reactionsEnabled="1"
-                    emitMetadata="0"
-                    inputPosition="top"
-                    lang="zh-CN"
-                    loading="lazy"
+                    {...COMMENT_CONFIG}
                     theme={theme}
                 />
             ) : null}

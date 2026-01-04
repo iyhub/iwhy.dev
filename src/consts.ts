@@ -3,6 +3,8 @@ export const SITE_TITLE = 'iWhy Blog';
 export const SITE_DESCRIPTION = '阿歪的技术分享与生活随笔';
 export const SITE_AUTHOR = 'Ethan Zhu';
 
+import type { Repo, Mapping, BooleanString, InputPosition, Loading } from '@giscus/react';
+
 // 产品展示
 export interface Product {
     name: string;
@@ -10,6 +12,20 @@ export interface Product {
     url: string;
     icon?: string; // phosphor icon name: BookOpen, Star, Camera, etc.
 }
+
+export interface CommentConfig {
+    repo: Repo;
+    repoId: string;
+    category: string;
+    categoryId: string;
+    mapping: Mapping;
+    reactionsEnabled: BooleanString;
+    emitMetadata: BooleanString;
+    inputPosition: InputPosition;
+    lang: string;
+    loading: Loading;
+}
+
 
 export const PRODUCTS: Product[] = [
     {
@@ -85,3 +101,16 @@ export const PRODUCTS: Product[] = [
         icon: 'PhPaperPlaneTilt',
     },
 ];
+
+export const COMMENT_CONFIG: CommentConfig = {
+    repo: 'iyhub/iwhy.dev',
+    repoId: 'R_kgDOQuXySw',
+    category: 'Announcements',
+    categoryId: 'DIC_kwDOQuXyS84C0jgj',
+    mapping: 'title',
+    reactionsEnabled: '1',
+    emitMetadata: '0',
+    inputPosition: 'top',
+    lang: 'zh-CN',
+    loading: 'lazy',
+};
