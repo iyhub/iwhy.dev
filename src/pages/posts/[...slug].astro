@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
+import Comments from '../../components/Comment.tsx';
 
 export async function getStaticPaths() {
 	const posts = (await getCollection('posts', ({ data }) => data.draft !== true))
@@ -54,4 +55,5 @@ const { Content, headings } = await render(post);
 
 <PostLayout post={post} headings={headings} prevPost={prevPost} nextPost={nextPost} relatedPosts={relatedPosts}>
 	<Content />
+	<Comments client:only="react" />
 </PostLayout>
