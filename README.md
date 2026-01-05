@@ -205,12 +205,17 @@ pnpm build
 
 ### 字体
 
-项目使用 [霞鹜文楷](https://github.com/lxgw/LxgwWenKai) 作为中文字体，字体文件位于 `public/fonts/`。
+项目使用 [霞鹜文楷](https://github.com/lxgw/LxgwWenKai) 作为中文字体。
+
+```css
+/* global.css */
+@import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
+```
 
 ## 致谢
 
 - [Astro](https://astro.build) - 优秀的静态站点框架
-- [Bear Blog](https://bearblog.dev) - 设计灵感来源
 - [霞鹜文楷](https://github.com/lxgw/LxgwWenKai) - 优雅的开源中文字体
 - [Giscus](https://giscus.app) - 基于 GitHub Discussions 的评论系统
 
