@@ -6,11 +6,6 @@ tags: ["SaaS", "创意"]
 description: "将订阅按月费用生成比例网格，一眼看清谁在吃掉你的预算；免注册、浏览器即用。"
 ---
 
-
-# 把“订阅开销”变成可视化决策：从 Treemap 到轻量理财入口
-
-简介：当用户面对零散订阅费用时，表格与自省都不够用；用面积比例的 Treemap 把“每月被谁吞掉”显性化，是一种可复制的旧逻辑新组合。
-
 ## 1. 故事背景：问题是如何被看见的
 [subscriptions visualizer](https://visualize.nguyenvu.dev/)
 

@@ -41,7 +41,7 @@
 ```bash
 # 克隆项目
 git clone git@github.com:iyhub/iwhy.dev.git
-cd iwhy-blog
+cd iwhy.dev
 
 # 安装依赖
 pnpm install
