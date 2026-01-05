@@ -40,7 +40,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/iwhy-blog.git
+git clone git@github.com:iyhub/iwhy.dev.git
 cd iwhy-blog
 
 # 安装依赖
